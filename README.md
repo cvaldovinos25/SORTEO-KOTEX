@@ -1,6 +1,6 @@
-# Kotex ¡SORTEO! en Salcobrand: atrapa los productos (WebAR + NFC)
+# Kotex ¡SORTEO! v2 (WebAR)
 
-Experiencia web de realidad aumentada para celulares. La clienta toca el sticker NFC (o escanea el QR) de la góndola, se abre la página, apunta la cámara y juega **una sola vez**: de la caja Kotex en 3D salen **7 productos** que flotan a su alrededor y tiene que **encontrarlos moviendo el celular y atraparlos tocando la pantalla, lo más rápido posible**. Mientras menos tarde, más puntos (máximo 500) y **más probabilidad de ganar la PR Box de Kotex**. Al terminar recibe un **código único por jugada** con su **hora exacta**, registra nombre y celular, y todo queda en una planilla de Google Sheets lista para el sorteo.
+Experiencia web de realidad aumentada para celulares. El/La Cliente/a toca el sticker NFC (o escanea el QR) de la góndola, se abre la página, apunta la cámara y juega **una sola vez**: de la caja Kotex en 3D salen **7 productos** que flotan a su alrededor y tiene que **encontrarlos moviendo el celular y atraparlos tocando la pantalla, lo más rápido posible**. Mientras menos tarde, más puntos (máximo 500) y **más probabilidad de ganar la PR Box de Kotex**. Al terminar recibe un **código único por jugada** con su **hora exacta**, registra nombre y celular, y todo queda en una planilla de Google Sheets lista para el sorteo.
 
 ```
 kotex-ra/
@@ -10,8 +10,6 @@ kotex-ra/
     ├── Code.gs             Backend: guarda jugadas en Google Sheets y hace el sorteo ponderado
     └── appsscript.json     Manifiesto del script
 ```
-
-Publicada en: https://cvaldovinos25.github.io/SORTEO-KOTEX/
 
 ## Cómo se juega
 
