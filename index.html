@@ -51,6 +51,7 @@ p{margin:0 0 12px;line-height:1.45;color:var(--mut)}
 #reticle:after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:var(--a)}
 @keyframes ret{to{transform:rotate(360deg)}}
 #place{pointer-events:auto;width:auto;padding:15px 28px}
+#scanTxt{position:fixed;left:50%;top:calc(104px + env(safe-area-inset-top));transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);text-align:center;background:rgba(21,10,38,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:600;color:#fff;pointer-events:none;z-index:6}
 #aim{position:fixed;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border:3px solid rgba(255,255,255,.92);border-radius:50%;pointer-events:none;z-index:6;box-shadow:0 0 22px rgba(255,79,163,.65),inset 0 0 14px rgba(255,79,163,.35)}
 #aim:after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--a)}
 #seek{position:fixed;inset:0;pointer-events:none;z-index:6}
@@ -139,6 +140,7 @@ input[type=text],input[type=tel]{width:100%;padding:14px;border-radius:14px;bord
 </section>
 <div id="reticle" hidden></div>
 <div id="aim" hidden></div>
+<div id="scanTxt" hidden>Escanea tu alrededor para encontrar los objetos</div>
 <div id="seek" hidden><div id="seekArrow"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div></div>
 <div id="lost" hidden>
   <div class="pill" id="lostTxt">Apunta de nuevo a la caja</div>
@@ -1245,7 +1247,7 @@ function prebuildProducts(){
 function clearItems(){
   if(catchG)items.forEach(it=>catchG.remove(it.root));
   items=[];ct=null;
-  const a=$('#aim'),s=$('#seek');if(a)a.hidden=true;if(s)s.hidden=true;
+  const a=$('#aim'),s=$('#seek'),c=$('#scanTxt');if(a)a.hidden=true;if(s)s.hidden=true;if(c)c.hidden=true;
 }
 function catchScore(t,found){
   if(found<CATCH.COUNT)return Math.round(CATCH.MIN*found/CATCH.COUNT);
@@ -1280,7 +1282,7 @@ function startCatchRound(){
   });
   ct={t:0,found:0,lastFind:0,done:false,miss:0};
   drawDots();catchPill(false);
-  $('#aim').hidden=false;
+  $('#aim').hidden=false;$('#scanTxt').hidden=false;
   setHint('¡Encuentra y atrapa los '+n+' productos lo más rápido que puedas!');
   sfx('round');
   G.running=true;
@@ -1369,7 +1371,7 @@ function endCatch(){
   ct.done=true;G.running=false;
   const t=Math.min(ct.t,CATCH.WORST),found=ct.found;
   G.score=catchScore(t,found);G.round=CONFIG.ROUNDS;
-  $('#aim').hidden=true;$('#seek').hidden=true;
+  $('#aim').hidden=true;$('#seek').hidden=true;$('#scanTxt').hidden=true;
   catchPill(false);$('#roundTxt').textContent='⏱ '+fmtT(t)+' · '+found+' de '+CATCH.COUNT;
   setHint(found>=CATCH.COUNT?('¡Lo lograste en '+t.toFixed(1)+' s!'):'Se acabó el tiempo');
   store.set(K('run'),{score:G.score,results:[found]});
