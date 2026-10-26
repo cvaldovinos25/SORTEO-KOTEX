@@ -206,7 +206,7 @@ const CONFIG={
   // >>> AQUÍ VA LA CONEXIÓN CON GOOGLE SHEETS <<<
   // Pega entre las comillas la URL de la "Aplicación web" de Apps Script (termina en /exec).
   // Mientras esté vacío, la página funciona en MODO DEMO y NO guarda nada en la planilla.
-  ENDPOINT:"https://script.google.com/macros/s/AKfycbzou26zi-zt97LPIBEAev7hIpR3g3QZm_MfhgyeU6u05FMdDVDUQS-7y2h6bYxFObYAoQ/exec",
+  ENDPOINT:"https://script.google.com/macros/s/AKfycbwnKn0cMegWEf-0SGwHDm43JhTrEozhHn9X0v6D247BST5L_AkugHifhKszFtiKfApb4A/exec",
   CAMPAIGN:"KOTEX-SALCOBRAND-2026",
   MODE:'catch',                      // 'catch' = atrapa los productos que salen de la caja; 'ring' = juego del aro de luz
   ROUNDS:7,                          // cantidad de rondas
@@ -469,11 +469,11 @@ function genCode(){
 
 let last=store.get(K('last'));       // jugada ya terminada (solo se puede jugar 1 vez)
 let run=store.get(K('run'));         // jugada en curso: {score,results}
-async function recordPlay(score){
+async function recordPlay(score,secs){
   const clientTs=new Date().toISOString();
   for(let i=0;i<4;i++){
     const code=genCode();
-    const p={action:'play',code,score,campaign:CONFIG.CAMPAIGN,store:STORE_ID,gondola:GONDOLA,device:DEVICE,clientTs,ua:navigator.userAgent.slice(0,180)};
+    const p={action:'play',code,score,secs:(secs==null?'':Math.round(secs*10)/10),campaign:CONFIG.CAMPAIGN,store:STORE_ID,gondola:GONDOLA,device:DEVICE,clientTs,ua:navigator.userAgent.slice(0,180)};
     try{
       const res=await api(p);
       if(res.ok)return {code,score,ts:res.ts,tsLocal:res.tsLocal,pending:false,registered:false};
@@ -1370,11 +1370,11 @@ function endCatch(){
   if(!ct||ct.done)return;
   ct.done=true;G.running=false;
   const t=Math.min(ct.t,CATCH.WORST),found=ct.found;
-  G.score=catchScore(t,found);G.round=CONFIG.ROUNDS;
+  G.score=catchScore(t,found);G.secs=t;G.round=CONFIG.ROUNDS;
   $('#aim').hidden=true;$('#seek').hidden=true;$('#scanTxt').hidden=true;
   catchPill(false);$('#roundTxt').textContent='⏱ '+fmtT(t)+' · '+found+' de '+CATCH.COUNT;
   setHint(found>=CATCH.COUNT?('¡Lo lograste en '+t.toFixed(1)+' s!'):'Se acabó el tiempo');
-  store.set(K('run'),{score:G.score,results:[found]});
+  store.set(K('run'),{score:G.score,secs:t,results:[found]});
   setTimeout(finish,1400);
 }
 async function finish(){
@@ -1384,7 +1384,7 @@ async function finish(){
   sfx('unlock');
   setTimeout(()=>{G.openTarget=1;G.flash=1;},600);
   setTimeout(()=>burst(0,.3,[CONFIG.COLORS.accent,'#ffd43b','#7a6cdc','#ffffff','#2dd4a0'],90,{up:true,speed:1.6,spread:1.2,decay:.55}),1000);
-  const pending=recordPlay(G.score);
+  const pending=recordPlay(G.score,(run&&run.secs!=null)?run.secs:G.secs);
   await sleep(2600);
   const res=await pending;
   store.del(K('run'));run=null;
@@ -1595,7 +1595,7 @@ $('#go').addEventListener('click',begin);
 // no se puede volver a empezar.
 async function recoverRun(){
   show('busy');
-  const res=await recordPlay(run.score||0);
+  const res=await recordPlay(run.score||0,run.secs);
   store.del(K('run'));run=null;
   if(res.limit){show('limit');return;}
   last=res;store.set(K('last'),last);
