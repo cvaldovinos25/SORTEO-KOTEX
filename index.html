@@ -164,14 +164,14 @@ input[type=text],input[type=tel]{width:100%;padding:14px;border-radius:14px;bord
     <p class="ts" id="ts"></p>
     <p class="ts" id="pending" hidden><span class="badge warn">Sin señal: se enviará solo cuando vuelva la conexión</span></p>
     <form id="f" novalidate>
-      <p style="margin:0">Registra tus datos para entrar al sorteo:</p>
+      <p style="margin:0">Registra tus datos para potenciar tus probabilidades de ganar el sorteo:</p>
       <label>Nombre
         <input type="text" id="name" autocomplete="name" maxlength="80" placeholder="Tu nombre y apellido">
       </label>
       <label>Celular
         <div class="phone"><span>+56</span><input type="tel" id="phone" autocomplete="tel-national" inputmode="numeric" maxlength="14" placeholder="9 1234 5678"></div>
       </label>
-      <label class="chk"><input type="checkbox" id="optin"><span>Acepto las <a href="#" class="bases">bases del concurso</a> y que me contacten si resulto ganadora.</span></label>
+      <label class="chk"><input type="checkbox" id="optin"><span>Acepto las <a href="#" class="bases">bases del concurso</a> y que me contacten si resulto ganador/a.</span></label>
       <p class="err" id="err"></p>
       <button class="btn" id="send" type="submit">Registrarme en el sorteo</button>
     </form>
@@ -191,7 +191,7 @@ input[type=text],input[type=tel]{width:100%;padding:14px;border-radius:14px;bord
 
 <section class="screen" id="limit">
   <div class="card">
-    <h2>Ya usaste tu jugada</h2>
+    <h2>Ups! Ya jugaste...</h2>
     <p>Solo se puede jugar 1 vez y este celular ya participó.</p>
   </div>
 </section>
